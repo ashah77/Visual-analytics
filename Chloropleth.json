@@ -1,73 +1,67 @@
 {
- "$schema": "https://vega.github.io/schema/vega/v4.json",
- "width": 860,
- "height": 500,
-"autosize": "none",
- 
-
- "data": [
-   {
-     "name": "loss",
-     "url": "https://raw.githubusercontent.com/ashah77/Visual-analytics/master/losses2015_transformed.csv",
-     "format": {"type": "csv", "parse": "auto"},
-     "transform":[
-         {"type": "aggregate",
-         "groupby": ["State_Code","State_Abv"],
-         "ops": ["sum"],
-         "fields": ["Amount"],
+  "$schema": "https://vega.github.io/schema/vega/v4.json",
+  "width": 860,
+  "height": 500,
+  "autosize": "none",
+  "data": [
+    {
+      "name": "loss",
+      "url": "https://raw.githubusercontent.com/ashah77/Visual-analytics/master/losses2015_transformed.csv",
+      "format": {"type": "csv", "parse": "auto", "delimiter": ","},
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": ["State_Code", "State_Abv"],
+          "ops": ["sum"],
+          "fields": ["Amount"],
           "as": ["Amount"]
-         }]
-   },
-   {
-     "name": "states",
-     "url": "https://raw.githubusercontent.com/ashah77/Visual-analytics/master/us-10m.json",
-     "format": {"type": "topojson", "feature": "states"},
-     "transform": [
-       {  "type": "lookup", "from": "loss", "key": "State_Code", "fields": ["id"], "values": ["Amount","State_Abv"] },
-       { "type": "filter", "expr": "datum.Amount != null" }
-      
-     ]
-   }
- ],
-
- "projections": [
-   {
-     "name": "projection",
-     "type": "albersUsa"
-   }
- ],
-
- "scales": [
-   {
-     "name": "color",
-     "type": "quantize",
-     "domain": [0, 299999111],
-     "range": {"scheme": "blues", "count": 10}
-   }
- ],
-
- "legends": [
-   {
-     "fill": "color",
-     "orient": "bottom-right",
-     "title": "loss",
-     "format": "0"
-   }
- ],
-
- "marks": [
-   {
-     "type": "shape",
-     "from": {"data": "states"},
-     "encode": {
-       "enter": { "tooltip": {"signal": "format(datum.Amount, '0')"}},
-       "update": { "fill": {"scale": "color", "field": "Amount"}, 
-        "tooltip": {"signal": "'State : ' + datum.State_Abv  + '    Amount: ' + datum.Amount"}},
-       "hover": { "fill": {"value": "red"} }
-     },
-     "transform": [
-       { "type": "geoshape", "projection": "projection" }
-     ]
-   }
- ]
+        }
+      ]
+    },
+    {
+      "name": "states",
+      "url": "https://raw.githubusercontent.com/ashah77/Visual-analytics/master/us-10m.json",
+      "format": {"type": "topojson", "feature": "states"},
+      "transform": [
+        {
+          "type": "lookup",
+          "from": "loss",
+          "key": "State_Code",
+          "fields": ["id"],
+          "values": ["Amount", "State_Abv"]
+        },
+        {"type": "filter", "expr": "datum.Amount != null"}
+      ]
+    }
+  ],
+  "projections": [{"name": "projection", "type": "albersUsa"}],
+  "scales": [
+    {
+      "name": "color",
+      "type": "quantize",
+      "domain": [0, 299999111],
+      "range": {"scheme": "blues", "count": 10}
+    }
+  ],
+  "legends": [
+    {"fill": "color", "orient": "bottom-right", "title": "loss", "format": "0"}
+  ],
+  "marks": [
+    {
+      "type": "shape",
+      "from": {"data": "states"},
+      "encode": {
+        "enter": {"tooltip": {"signal": "format(datum.Amount, '0')"}},
+        "update": {
+          "fill": {"scale": "color", "field": "Amount"},
+          "tooltip": {
+            "signal": "'State : ' + datum.State_Abv  + '   | Amount: ' + datum.Amount"
+          }
+        },
+        "hover": {"fill": {"value": "red"}}
+      },
+      "transform": [{"type": "geoshape", "projection": "projection"}]
+    }
+  ],
+  "config": {}
 }
