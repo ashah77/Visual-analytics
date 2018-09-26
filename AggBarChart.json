@@ -1,7 +1,7 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
   "description": "A bar chart showing the US population distribution of age groups in 2000.",
-  "width": 1000,
+  "height": 500,
   "data": { "url": "https://raw.githubusercontent.com/ashah77/Visual-analytics/master/losses2015_transformed.csv"},
   "mark": "bar",
   "encoding": {
